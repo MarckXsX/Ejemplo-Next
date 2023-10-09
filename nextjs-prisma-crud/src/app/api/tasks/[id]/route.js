@@ -1,0 +1,40 @@
+import { NextResponse } from "next/server";
+import { prisma } from "@/libs/prisma";
+
+export async function GET(request, { params }) {
+  //Obtener
+  const task = await prisma.task.findUnique({
+    where: {
+      id: Number(params.id),
+    },
+  });
+  // console.log(task)
+  return NextResponse.json(task);
+}
+
+export async function PUT(request, { params }) {
+  //Actualizar
+  const data = await request.json();
+  const taskUpdate = await prisma.task.update({
+    where: {
+      id: Number(params.id),
+    },
+    data: data,
+  });
+  return NextResponse.json(taskUpdate);
+}
+
+export async function DELETE(request, { params }) {
+  //Eliminar
+  try {
+    const taskRemove = await prisma.task.delete({
+      where: {
+        id: Number(params.id),
+      },
+    });
+    console.log(taskRemove);
+    return NextResponse.json(taskRemove);
+  } catch (error) {
+    return NextResponse.json(error.message);
+  }
+}
